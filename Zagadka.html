@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zagadka Urodzinowa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom, #ffd700, #ff69b4);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        .present-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background-color: #ff69b4;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            display: none;
+            z-index: 1000;
+        }
+        .present img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .present.opened {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        .present.opened img {
+            opacity: 1;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ff69b4;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1.1rem;
+        }
+        button {
+            padding: 15px 30px;
+            margin-top: 20px;
+            background-color: #ff69b4;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #d45496;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #ff69b4;
+            display: none;
+        }
+        .result-success {
+            color: green;
+        }
+        .result-fail {
+            color: red;
+        }
+        #fullscreen-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #fullscreen-image img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <h1>Zagadka Urodzinowa</h1>
+        <p>Wpisz hasło, aby odkryć niespodziankę urodzinową:</p>
+        <input type="text" id="password" placeholder="Wpisz hasło">
+        <button onclick="checkPassword()">Sprawdź</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="present-wrapper" id="present" onclick="openPresent()">
+        <div class="present" id="present-box">
+            <img src="https://cdn.discordapp.com/attachments/1141834695831736381/1248975350021754881/zagadka.png?ex=666ed8f0&is=666d8770&hm=63b2692d4e345b5cbe236fec14d5175d1c795769316c922fcaef0305ded0d8b3" alt="Niespodzianka">
+        </div>
+    </div>
+
+    <div id="fullscreen-image">
+        <img id="fullscreen-img" src="https://cdn.discordapp.com/attachments/1141834695831736381/1248975350021754881/zagadka.png?ex=666ed8f0&is=666d8770&hm=63b2692d4e345b5cbe236fec14d5175d1c795769316c922fcaef0305ded0d8b3" alt="Zdjęcie miejsca">
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var container = document.getElementById("container");
+            container.style.transform = "translateY(0)";
+            container.style.opacity = "1";
+        });
+
+        function checkPassword() {
+            var password = document.getElementById("password").value.toUpperCase();
+            var result = document.getElementById("result");
+
+            if (password === "ZPW") {
+                result.innerHTML = "Gratulacje! Oto Twoja urodzinowa niespodzianka:";
+                result.classList.add("result-success");
+                result.style.display = "block";
+                container.style.opacity = "0";
+                container.style.pointerEvents = "none";
+                setTimeout(function() {
+                    document.querySelector(".present-wrapper").style.display = "flex";
+                }, 500);
+            } else {
+                result.innerHTML = "Niestety, to nie jest poprawne hasło. Spróbuj ponownie.";
+                result.classList.add("result-fail");
+                result.style.display = "block";
+            }
+        }
+
+        function openPresent() {
+            var fullscreenImage = document.getElementById("fullscreen-image");
+            var fullscreenImg = document.getElementById("fullscreen-img");
+
+            fullscreenImage.style.display = "flex"; // Wyświetl pełnoekranowe tło
+
+            setTimeout(function() {
+                fullscreenImg.style.opacity = "1"; // Pokaż obrazek
+            }, 100);
+        }
+    </script>
+</body>
+</html>
